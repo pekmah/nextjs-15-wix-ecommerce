@@ -4,6 +4,8 @@ import banner from "@/assets/banner.jpg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { FeaturedProducts } from "@/components/home";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -39,6 +41,11 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-secondary via-transparent to-transparent"></div>
         </div>
       </div>
+
+      {/* Featured products */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <FeaturedProducts />
+      </Suspense>
     </main>
   );
 }
