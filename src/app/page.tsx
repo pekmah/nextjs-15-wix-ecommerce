@@ -26,7 +26,7 @@ export default function Home() {
 
           <Button asChild>
             <Link href="/products">
-              Shop now <ArrowRight className="ml-2 size-5" />
+              Shop Now <ArrowRight className="ml-2 size-5" />
             </Link>
           </Button>
         </div>

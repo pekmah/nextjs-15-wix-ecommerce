@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import { media as wixMedia } from "@wix/sdk";
 import { products } from "@wix/stores";
 import Link from "next/link";
-import React from "react";
+import WixImage from "./wix-image";
 
 interface IProductProps {
   product: products.Product;
@@ -10,9 +9,6 @@ interface IProductProps {
 
 const Product = ({ product }: IProductProps) => {
   const productImage = product.media?.mainMedia?.image;
-  const resizedImage = productImage?.url
-    ? wixMedia.getScaledToFillImageUrl(productImage.url, 700, 700, {})
-    : null;
 
   return (
     <Link
@@ -20,10 +16,12 @@ const Product = ({ product }: IProductProps) => {
       className="h-full overflow-hidden rounded-sm"
     >
       <div className="overflow-hidden">
-        <img
-          src={resizedImage || "/placeholder.png"}
-          alt={productImage?.altText || "product"}
+        <WixImage
+          media={productImage?.url}
+          alt={productImage?.altText}
           className="transition-transform duration-300 hover:scale-105"
+          width={700}
+          height={700}
         />
       </div>
 
