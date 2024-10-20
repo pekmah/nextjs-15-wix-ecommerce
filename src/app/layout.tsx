@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Lato } from "next/font/google";
 import "./globals.css";
 
-const interFont = Inter({
+const interFont = Lato({
+  weight: "400",
   subsets: ["latin"],
 });
 
