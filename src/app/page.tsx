@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { FeaturedProducts } from "@/components/home";
 import { Suspense } from "react";
+import LoadingSkeleton from "@/components/general/loading-skeleton";
 
 export default function Home() {
   return (
@@ -43,7 +44,7 @@ export default function Home() {
       </div>
 
       {/* Featured products */}
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingSkeleton />}>
         <FeaturedProducts />
       </Suspense>
     </main>
