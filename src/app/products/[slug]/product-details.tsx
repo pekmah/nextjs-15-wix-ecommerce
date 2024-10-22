@@ -1,16 +1,18 @@
 "use client";
 import { Badge } from "@/components/general";
 import WixImage from "@/components/general/wix-image";
+import { findVariant } from "@/lib/utils";
 import { products } from "@wix/stores";
-import React, { useState } from "react";
+import { useState } from "react";
 import ProductOptions from "./product-options";
+import ProductPrice from "./product-price";
 
 interface IProductDetailsProps {
   product: products.Product;
 }
 
 export default function ProductDetails({ product }: IProductDetailsProps) {
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState<
     Record<string, string>
   >(
@@ -20,6 +22,9 @@ export default function ProductDetails({ product }: IProductDetailsProps) {
       }))
       ?.reduce((acc, curr) => ({ ...acc, ...curr }), {}) || {},
   );
+
+  const selectedVariant = findVariant(product, selectedOptions);
+  // const inStock = checkInStock(product, selectedOptions);
 
   return (
     <div className="flex flex-col gap-10 md:flex-row lg:gap-20">
@@ -50,6 +55,8 @@ export default function ProductDetails({ product }: IProductDetailsProps) {
           />
         )}
 
+        <ProductPrice product={product} selectedVariant={selectedVariant} />
+
         <ProductOptions
           product={product}
           selectedOptions={selectedOptions}
@@ -57,6 +64,7 @@ export default function ProductDetails({ product }: IProductDetailsProps) {
         />
 
         <div>{JSON.stringify(selectedOptions)}</div>
+        <div>{JSON.stringify(selectedVariant?.choices)}</div>
       </div>
     </div>
   );

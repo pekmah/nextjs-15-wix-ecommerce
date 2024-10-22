@@ -23,7 +23,7 @@ export async function Navbar() {
             width={60}
             height={60}
           />
-          <span>Pekstar Ecomm</span>
+          <span className="font-bold">Pekstar Ecomm</span>
         </Link>
         {totalQuantity ?? 0} Cart
       </div>
