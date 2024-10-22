@@ -1,9 +1,9 @@
 "use client";
 import { Badge } from "@/components/general";
-import WixImage from "@/components/general/wix-image";
 import { findVariant } from "@/lib/utils";
 import { products } from "@wix/stores";
 import { useState } from "react";
+import ProductMedia from "./media";
 import ProductOptions from "./product-options";
 import ProductPrice from "./product-price";
 
@@ -28,15 +28,7 @@ export default function ProductDetails({ product }: IProductDetailsProps) {
 
   return (
     <div className="flex flex-col gap-10 md:flex-row lg:gap-20">
-      <div className="basis-2/5">
-        <WixImage
-          media={product?.media?.mainMedia?.image?.url}
-          alt={product?.media?.mainMedia?.image?.altText}
-          width={1000}
-          height={1000}
-          className="sticky top-5"
-        />
-      </div>
+      <ProductMedia media={product.media?.items} />
 
       <div className="basis-3/5 space-y-5">
         <div className="5 space-y-2">
@@ -62,9 +54,6 @@ export default function ProductDetails({ product }: IProductDetailsProps) {
           selectedOptions={selectedOptions}
           setSelectedOptions={setSelectedOptions}
         />
-
-        <div>{JSON.stringify(selectedOptions)}</div>
-        <div>{JSON.stringify(selectedVariant?.choices)}</div>
       </div>
     </div>
   );
