@@ -10,8 +10,9 @@ interface IPageProps {
 }
 
 export async function generateMetadata({
-  params: { slug },
+  params,
 }: IPageProps): Promise<Metadata> {
+  const { slug } = await params;
   const product = await getProductBySlug(slug);
 
   if (!product) notFound();
@@ -36,7 +37,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function page({ params: { slug } }: IPageProps) {
+export default async function page({ params }: IPageProps) {
+  const { slug } = await params;
   await delay(3000);
   const product = await getProductBySlug(slug);
 
