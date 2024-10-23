@@ -3,15 +3,17 @@ import React from "react";
 import { Product } from "../general";
 import { getCollectionBySlug } from "@/api/collections";
 import { queryProducts } from "@/api/products";
+import { getWixServerClient } from "@/lib/wix-client.server";
 
 async function FeaturedProducts() {
   await delay(1000);
+  const wixClient = await getWixServerClient();
 
-  const collection = await getCollectionBySlug("featured-products");
+  const collection = await getCollectionBySlug(wixClient, "featured-products");
 
   if (!collection?._id) return null;
 
-  const featuredProducts = await queryProducts({
+  const featuredProducts = await queryProducts(wixClient, {
     collectionIds: collection._id,
   });
 

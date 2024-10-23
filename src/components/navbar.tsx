@@ -1,17 +1,17 @@
 import { getCart } from "@/api/cart";
 import logo from "@/assets/cart-icon.jpg";
+import { getWixServerClient } from "@/lib/wix-client.server";
 import Image from "next/image";
 import Link from "next/link";
 
 export async function Navbar() {
-  const cart = await getCart();
+  const cart = await getCart(await getWixServerClient());
 
   const totalQuantity = cart?.lineItems?.reduce(
     (acc, lineItem) => acc + (lineItem?.quantity || 0),
     0,
   );
-  // const cart =
-  console.log(totalQuantity);
+
   return (
     <header className="bg-background shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 p-5">
@@ -25,7 +25,7 @@ export async function Navbar() {
           />
           <span className="font-bold">Pekstar Ecomm</span>
         </Link>
-        {totalQuantity ?? 0} Cart
+        {totalQuantity ?? 0} Cart Items
       </div>
     </header>
   );
