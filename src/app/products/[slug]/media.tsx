@@ -2,7 +2,7 @@ import WixImage from "@/components/general/wix-image";
 import { cn } from "@/lib/utils";
 import { products } from "@wix/stores";
 import { PlayIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Zoom from "react-medium-image-zoom";
 
 interface IProductMediaProps {
@@ -12,13 +12,17 @@ interface IProductMediaProps {
 export default function ProductMedia({ media }: IProductMediaProps) {
   const [selectedMedia, setSelectedMedia] = useState(media?.at(0));
 
+  useEffect(() => {
+    setSelectedMedia(media?.at(0));
+  }, [media]);
+
   if (!media?.length) return null;
 
   const selectedImage = selectedMedia?.image;
   const selectedVideo = selectedMedia?.video?.files?.at(0);
 
   return (
-    <div className="h-fit basis-2/5 space-y-5 md:sticky md:top-5">
+    <div className="h-fit basis-2/5 space-y-5 md:sticky md:top-10">
       <div className="aspect-square bg-secondary">
         {selectedImage?.url ? (
           <Zoom key={selectedImage?.url}>
