@@ -95,7 +95,7 @@ export default function ProductDetails({ product }: IProductDetailsProps) {
             />
 
             {!!availableQuantity &&
-              (availableQuantityExceeded || availableQuantity < 10) && (
+              (availableQuantityExceeded || availableQuantity < 5) && (
                 <span className="text-destructive">
                   Only {availableQuantity} left in stock
                 </span>
