@@ -3,6 +3,8 @@ import { Lato } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
+import TanstackProvider from "@/app/tanstack-provider";
+import { Toaster } from "@/components/ui/toaster";
 
 const interFont = Lato({
   weight: "400",
@@ -25,11 +27,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={interFont.className}>
-        <Navbar />
+        <TanstackProvider>
+          <Navbar />
 
-        {children}
+          {children}
 
-        <Footer />
+          <Footer />
+        </TanstackProvider>
+
+        <Toaster />
       </body>
     </html>
   );

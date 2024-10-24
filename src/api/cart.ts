@@ -15,11 +15,10 @@ export async function getCart(wixClient: WixClient) {
     } else {
       throw error;
     }
-    return null;
   }
 }
 
-interface IAddToCart {
+export interface IAddToCart {
   product: products.Product;
   selectedOptions: Record<string, string>;
   quantity: number;

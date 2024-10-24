@@ -3,14 +3,10 @@ import logo from "@/assets/cart-icon.jpg";
 import { getWixServerClient } from "@/lib/wix-client.server";
 import Image from "next/image";
 import Link from "next/link";
+import ShoppingCartBtn from "@/components/general/shopping-cart-btn";
 
 export async function Navbar() {
   const cart = await getCart(await getWixServerClient());
-
-  const totalQuantity = cart?.lineItems?.reduce(
-    (acc, lineItem) => acc + (lineItem?.quantity || 0),
-    0,
-  );
 
   return (
     <header className="bg-background shadow-sm">
@@ -25,7 +21,8 @@ export async function Navbar() {
           />
           <span className="font-bold">Pekstar Ecomm</span>
         </Link>
-        {totalQuantity ?? 0} Cart Items
+
+        <ShoppingCartBtn initialData={cart} />
       </div>
     </header>
   );

@@ -109,6 +109,8 @@ export default function ProductDetails({ product }: IProductDetailsProps) {
             product={product}
             selectedOptions={selectedOptions}
             quantity={quantity}
+            disabled={availableQuantityExceeded || quantity < 1}
+            className={"h-12 w-full"}
           />
         ) : (
           <span>Out of stock</span>
