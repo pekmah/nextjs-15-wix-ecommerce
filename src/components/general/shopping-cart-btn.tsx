@@ -1,10 +1,14 @@
 "use client";
 
 import { currentCart } from "@wix/ecom";
-import { useCart } from "@/hooks/cart";
+import {
+  useCart,
+  useRemoveCartItem,
+  useUpdateCartItemQuantity,
+} from "@/hooks/cart";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ShoppingCartIcon } from "lucide-react";
+import { Loader2, ShoppingCartIcon, X } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -66,13 +70,40 @@ export default function ShoppingCartBtn({
           <div className={"flex grow flex-col space-y-5 overflow-y-auto"}>
             <ul className={"space-y-5"}>
               {cartQuery.data?.lineItems?.map((item) => (
-                <ShoppingCartItem key={item._id} item={item} />
+                <ShoppingCartItem
+                  key={item._id}
+                  item={item}
+                  onProductLinkClick={() => setSheetOpen(false)}
+                />
               ))}
             </ul>
 
+            {cartQuery.isPending && (
+              <Loader2 className="mx-auto animate-spin" />
+            )}
+            {cartQuery.isError && (
+              <p className="text-destructive">
+                {cartQuery.error?.message || "An error occurred"}
+              </p>
+            )}
+            {!cartQuery.isPending && !cartQuery.data?.lineItems?.length && (
+              <div className="flex grow items-center justify-center text-center">
+                <div className="5 space-y-1">
+                  <p className="text-lg font-semibold">Your Cart is Empty</p>
+                  <Link
+                    href={"/shop"}
+                    className="my-2 text-primary hover:underline"
+                    onClick={() => setSheetOpen(false)}
+                  >
+                    Start Shopping
+                  </Link>
+                </div>
+              </div>
+            )}
+
             <pre>{JSON.stringify(cartQuery.data, null, 2)}</pre>
           </div>
-
+          <hr />
           {/*  footer*/}
           <div className={"flex items-center justify-between gap-5"}>
             <div className={"space-y-0.5"}>
@@ -88,7 +119,12 @@ export default function ShoppingCartBtn({
               </p>
             </div>
 
-            <Button size={"lg"}>Checkout</Button>
+            <Button
+              disabled={!totalQuantity || cartQuery?.isFetching}
+              size={"lg"}
+            >
+              Checkout
+            </Button>
           </div>
         </SheetContent>
       </Sheet>
@@ -98,9 +134,19 @@ export default function ShoppingCartBtn({
 
 interface IShoppingCartItemProps {
   item: currentCart.LineItem;
+  onProductLinkClick: () => void;
 }
 
-function ShoppingCartItem({ item }: IShoppingCartItemProps) {
+function ShoppingCartItem({
+  item,
+  onProductLinkClick,
+}: IShoppingCartItemProps) {
+  const updateQuantityMutation = useUpdateCartItemQuantity();
+  const removeItemMutation = useRemoveCartItem();
+  const productId = item._id;
+
+  if (!productId) return null;
+
   const slug = item.url?.split("/").pop(); //get last element of the array
   const quantityLimitReached =
     !!item.quantity &&
@@ -109,18 +155,27 @@ function ShoppingCartItem({ item }: IShoppingCartItemProps) {
 
   return (
     <li className="flex items-center gap-3">
-      <Link href={`/products/${slug}`}>
-        <WixImage
-          media={item.image}
-          width={110}
-          height={110}
-          alt={item?.productName?.translated || "product image"}
-          className="flex-none bg-secondary"
-        />
-      </Link>
+      <div className="relative size-fit flex-none">
+        <Link href={`/products/${slug}`} onClick={onProductLinkClick}>
+          <WixImage
+            media={item.image}
+            width={110}
+            height={110}
+            alt={item?.productName?.translated || "product image"}
+            className="flex-none bg-secondary"
+          />
+        </Link>
+
+        <button
+          className="absolute -right-1 -top-1 rounded-full bg-background p-0.5"
+          onClick={() => removeItemMutation.mutate(productId)}
+        >
+          <X className="size-3" />
+        </button>
+      </div>
 
       <div className="5 space-y-1 text-sm">
-        <Link href={`/products/${slug}`}>
+        <Link href={`/products/${slug}`} onClick={onProductLinkClick}>
           <p className="font-bold">{item.productName?.translated || "Item"}</p>
         </Link>
         {!!item.descriptionLines?.length && (
@@ -149,6 +204,12 @@ function ShoppingCartItem({ item }: IShoppingCartItemProps) {
             size={"sm"}
             disabled={item.quantity === 1}
             className="rounded-none disabled:cursor-not-allowed"
+            onClick={() =>
+              updateQuantityMutation.mutate({
+                productId,
+                quantity: item.quantity ? item.quantity - 1 : 0,
+              })
+            }
           >
             -
           </Button>
@@ -160,6 +221,12 @@ function ShoppingCartItem({ item }: IShoppingCartItemProps) {
             size={"sm"}
             disabled={quantityLimitReached}
             className="rounded-none"
+            onClick={() =>
+              updateQuantityMutation.mutate({
+                productId,
+                quantity: item.quantity ? item.quantity + 1 : 1,
+              })
+            }
           >
             +
           </Button>

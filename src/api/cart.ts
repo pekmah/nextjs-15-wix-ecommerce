@@ -47,3 +47,26 @@ export async function addToCart(
     ],
   });
 }
+
+// update cart items quantity
+export interface IUpdateCartItemQuantity {
+  productId: string;
+  quantity: number;
+}
+
+export async function updateCartItemQuantity(
+  wixClient: WixClient,
+  { productId, quantity }: IUpdateCartItemQuantity,
+) {
+  return wixClient.currentCart.updateCurrentCartLineItemQuantity([
+    {
+      _id: productId,
+      quantity,
+    },
+  ]);
+}
+
+// delete cart item
+export async function removeCartItem(wixClient: WixClient, productId: string) {
+  return wixClient.currentCart.removeLineItemsFromCurrentCart([productId]);
+}
