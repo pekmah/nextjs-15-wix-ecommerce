@@ -100,8 +100,6 @@ export default function ShoppingCartBtn({
                 </div>
               </div>
             )}
-
-            <pre>{JSON.stringify(cartQuery.data, null, 2)}</pre>
           </div>
           <hr />
           {/*  footer*/}
